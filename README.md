@@ -23,6 +23,26 @@ Essas melhorias tornam o projeto uma base sólida para estudos, experimentos e c
 ## O que é Lox?
 Lox é uma linguagem de programação criada para fins educacionais, ideal para aprender sobre construção de interpretadores e compiladores.
 
+
+## Arquitetura da Máquina Virtual
+
+O C-Lox implementa uma **máquina virtual baseada em stack**, seguindo os princípios clássicos de design de linguagens de programação.
+
+### Componentes Principais
+
+- **Bytecode**: O código fonte Lox é compilado para um bytecode customizado com operações como `OP_CONSTANT`, `OP_ADD`, `OP_CALL`, `OP_JUMP`, etc.
+- **Stack Machine**: Utiliza uma pilha para executar operações, onde valores são empilhados e desempilhados conforme necessário
+- **Call Frames**: Cada função em execução possui seu próprio frame com closure, instruction pointer e slots de variáveis
+- **Memory Management**: Inclui garbage collection automático para gerenciamento de memória
+
+### Fluxo de Execução
+
+1. **Compilação**: Código fonte Lox → Bytecode
+2. **Execução**: VM executa bytecode instrução por instrução
+3. **Stack Operations**: Operações realizadas na pilha (push/pop)
+4. **Runtime**: Gerenciamento de memória e funções nativas
+
+
 ## Funcionalidades Implementadas
 
 ### Funcionalidades Básicas
