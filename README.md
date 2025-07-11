@@ -3,7 +3,7 @@
 Este projeto foi desenvolvido como parte do trabalho prático da disciplina de Compiladores, com o objetivo de aprofundar o entendimento sobre a construção de interpretadores e a implementação de linguagens de programação. Ele foi baseado em três principais referências:
 
 - O livro [Crafting Interpreters](https://craftinginterpreters.com/), que serviu de guia teórico e prático para a implementação da linguagem Lox.
-- O repositório original de referência (pasta `origin`), que traz uma implementação básica da linguagem Lox em C.
+- O repositório original de referência (https://github.com/britannio/lox), que traz uma implementação básica da linguagem Lox em C.
 - O repositório [lox-fun-es-Thales-Duarte](https://github.com/ThalesD/lox-fun-es-Thales-Duarte), que apresenta uma versão em Python, exemplos e exercícios, permitindo estudo comparativo entre abordagens e linguagens.
 
 ## Algumas Melhorias e Diferenciais
@@ -16,7 +16,7 @@ Durante o desenvolvimento, foram realizadas diversas melhorias em relação às 
 - **Suporte a enums:** Implementação completa de tipos enumerados com funções nativas para manipulação.
 - **Suporte a funções anônimas (lambdas):** Permite criar funções sem nome, inclusive com closures e corpo de expressão ou bloco.
 - **Operadores personalizados:** Permite que classes definam comportamentos personalizados para operadores aritméticos e de comparação.
-- **Ferraments de Debug**.
+- **Ferramentas de Debug**.
 
 Essas melhorias tornam o projeto uma base sólida para estudos, experimentos e comparações no contexto da disciplina de Compiladores.
 
@@ -60,7 +60,6 @@ O C-Lox implementa uma **máquina virtual baseada em stack**, seguindo os princ�
 - **examples/**: Exemplos de programas Lox para testar funcionalidades.
 - **build.bat**: Script para compilar o projeto no Windows.
 - **test_examples.bat**: Script para executar testes automatizados.
-- **QUICKSTART.md**: Guia rápido de uso.
 
 ## Como compilar
 
@@ -72,10 +71,7 @@ Abra o terminal na raiz do projeto e execute:
 build.bat
 ```
 
-Ou, manualmente:
-```sh
-gcc src/chunk.c src/compiler.c src/context.c src/debug.c src/errors.c src/memory.c src/object.c src/scanner.c src/semantic.c src/table.c src/type_checking.c src/value.c src/vm.c src/main.c -O3 -o c-lox.exe
-```
+
 
 O executável `c-lox.exe` será gerado na raiz do projeto.
 
@@ -83,16 +79,33 @@ O executável `c-lox.exe` será gerado na raiz do projeto.
 
 ### Executar um arquivo Lox
 ```sh
-.\c-lox.exe examples\print\lists_test.lox
+.\c-lox.exe caminho\para\arquivo.lox
 ```
+Esse comando executa o arquivo Lox especificado, rodando todo o código presente nele e exibindo a saída no terminal.
 
 ### Modo interativo (REPL)
 ```sh
 .\c-lox.exe
 ```
+Ao executar apenas `.\c-lox.exe` sem argumentos, o interpretador entra no modo interativo, também conhecido como REPL (Read-Eval-Print Loop). Nesse modo, você pode digitar comandos Lox linha a linha diretamente no terminal, e o resultado de cada comando é exibido imediatamente. É ideal para testar pequenos trechos de código, aprender a linguagem ou depurar comportamentos.
+
+**Exemplo de sessão REPL:**
+```
+> print 1 + 2;
+3
+> var nome = "Lox";
+> print nome;
+Lox
+```
+Para sair do modo interativo, basta pressionar Ctrl+C ou Ctrl+D (dependendo do terminal).
+
+### Resumo dos modos de execução
+- `.\c-lox.exe` — Inicia o modo interativo (REPL)
+- `.\c-lox.exe caminho\para\arquivo.lox` — Executa um arquivo Lox
+- `.\c-lox.exe --ast caminho\para\arquivo.lox` — Mostra a árvore sintática (AST) do arquivo, sem executar o código
 
 ## Exemplos 
-Os exemplos abaixo cobrem as principais funcionalidades trabalhadas no trabalho. Execute cada um para validar o funcionamento do interpretador:
+Os exemplos abaixo cobrem as principais funcionalidades trabalhadas no trabalho:
 
 - **print/lists_test.lox** — Teste completo de listas e saída básica.
 - **print/dict_test.lox** — Teste completo de dicionários.
@@ -139,12 +152,9 @@ O script executa cada exemplo essencial e mostra a saída no terminal. Se algum 
 - **Problemas com dicionários:** Certifique-se de que está usando as funções nativas corretas (`dict()`, `dictSet()`, `dictGet()`, `dictDelete()`, `dictLength()`).
 - **Problemas com enums:** Certifique-se de que está usando as funções nativas corretas (`enum()`, `enumAddValue()`, `enumGetValue()`, `enumLength()`).
 
-# Limitação do método toString em instâncias
+# toString em instâncias
 
-No C-Lox, o método `toString()` **não é chamado automaticamente** ao imprimir uma instância com `print obj;`. O resultado será sempre:
-
-    NomeDaClasse instance
-
+No C-Lox, o método `toString()` **é chamado automaticamente** ao imprimir uma instância com `print obj;` ou ao concatenar objetos com strings. O resultado será o valor retornado por `toString()` se ele existir na classe. Caso contrário, será exibido `NomeDaClasse instance`.
 
 
 ## Visualizador de AST (Árvore de Sintaxe Abstrata)
@@ -155,37 +165,4 @@ O projeto possui um modo de debug que permite visualizar a Árvore de Sintaxe Ab
 
 Basta rodar o interpretador com a opção `--ast` ou `-a` antes do caminho do arquivo:
 
-```sh
-./c-lox.exe --ast examples/print/lists_test.lox
 ```
-
-ou
-
-```sh
-./c-lox.exe -a examples/print/lists_test.lox
-```
-
-A saída mostrará a estrutura sintática de cada expressão do programa. Quando essa opção está ativada, o código não é executado, apenas a árvore sintática é exibida.
-
-## Relatórios de Performance
-
-O script de testes automatizados (`test_examples.bat`) agora mede e exibe o tempo de execução de cada exemplo essencial. Isso permite analisar facilmente a performance de cada funcionalidade do interpretador.
-
-## Cobertura dos Testes
-
-O interpretador possui um sistema de cobertura de testes, que mostra quais partes principais do parser e do compilador foram exercitadas por cada exemplo.
-
-### Como funciona
-- Pontos estratégicos do código (como parsing de expressões, declaração de funções, variáveis, classes, comandos if, while, for, print, return, etc.) registram sua execução.
-- Após rodar qualquer exemplo ou o script de testes, é exibido um relatório como:
-- Cada linha indica que aquela parte do interpretador foi exercitada por pelo menos um exemplo.
-- Se algum ponto importante não aparecer, significa que nenhum exemplo testou aquele recurso.
-
-Assim, é possível identificar facilmente quais funcionalidades estão cobertas pelos testes e quais ainda precisam de exemplos específicos.
-
-
-
----
-
-
-

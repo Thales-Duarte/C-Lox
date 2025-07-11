@@ -149,8 +149,13 @@ void printObject(FILE* file, Value value) {
             printFunction(file, AS_FUNCTION(value));
             break;
         case OBJ_INSTANCE: {
-            ObjInstance* instance = AS_INSTANCE(value);
-            fprintf(file, "%s instance", instance->klass->name->chars);
+            Value str = valueToString(value);
+            if (IS_STRING(str)) {
+                fprintf(file, "%s", AS_CSTRING(str));
+            } else {
+                ObjInstance* instance = AS_INSTANCE(value);
+                fprintf(file, "%s instance", instance->klass->name->chars);
+            }
             break;
         }
         case OBJ_NATIVE:

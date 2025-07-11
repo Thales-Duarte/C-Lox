@@ -6,6 +6,13 @@ gcc src/chunk.c src/compiler.c src/context.c src/debug.c src/errors.c src/memory
 if %ERRORLEVEL% EQU 0 (
     echo Compilacao concluida com sucesso!
     echo Executavel: c-lox.exe
+    echo.
+    echo.
+    echo Uso:
+    echo   c-lox.exe [arquivo.lox]     - Executar arquivo
+    echo   c-lox.exe --test            - Executar testes
+    echo   c-lox.exe --optimize arquivo.lox - Executar com otimizacoes
+    echo   c-lox.exe --ast arquivo.lox - Modo debug AST
 ) else (
     echo Erro na compilacao!
 )

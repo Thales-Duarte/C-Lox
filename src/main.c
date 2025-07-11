@@ -73,7 +73,6 @@ int main(int argc, const char* argv[]) {
 #endif
     setlocale(LC_ALL, "");
     
-    coverage_reset();
     initVM();
 
     if (argc <= 1) {
@@ -89,7 +88,6 @@ int main(int argc, const char* argv[]) {
     }
 
     freeVM();
-    coverage_report();
 
     return 0;
 }

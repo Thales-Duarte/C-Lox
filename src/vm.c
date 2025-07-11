@@ -332,15 +332,22 @@ bool callValue(Value callee, int argCount) {
             }
             case OBJ_CLASS: {
                 ObjClass* klass = AS_CLASS(callee);
+                // Move os argumentos uma posição para frente
+                for (int i = argCount; i > 0; i--) {
+                    vm.stackTop[-i] = vm.stackTop[-i + 1];
+                }
                 vm.stackTop[-argCount - 1] = OBJ_VAL(newInstance(klass));
                 Value initializer;
                 if (tableGet(&klass->methods, vm.initString, &initializer)) {
+                    if (!IS_CLOSURE(initializer)) {
+                        runtimeError("Método 'init' da classe não é uma função.");
+                        return false;
+                    }
                     return call(AS_CLOSURE(initializer), argCount);
                 } else if (argCount != 0) {
                     runtimeError("Expected 0 arguments but got %d.", argCount);
                     return false;
                 }
-
                 return true;
             }
             case OBJ_CLOSURE: {
